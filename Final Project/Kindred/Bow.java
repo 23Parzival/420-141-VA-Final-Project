@@ -14,6 +14,6 @@ public class Bow extends Weapons
      */
     public void act()
     {
-        // Add your action code here.
+        
     }
 }

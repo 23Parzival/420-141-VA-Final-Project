@@ -14,6 +14,6 @@ public class Sword extends Weapons
      */
     public void act()
     {
-        // Add your action code here.
+        
     }
 }

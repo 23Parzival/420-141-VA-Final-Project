@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=HealthBar
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ HealthBar\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=entity\ width\ height
+comment1.target=HealthBar(Entity,\ int,\ int)
+comment2.params=entity\ width\ height\ x\ y
+comment2.target=HealthBar(Entity,\ int,\ int,\ int,\ int)
+comment3.params=
+comment3.target=void\ act()
+comment4.params=
+comment4.target=void\ draw()
+numComments=5
