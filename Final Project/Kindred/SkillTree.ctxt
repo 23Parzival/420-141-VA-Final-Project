@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=SkillTree
+comment1.params=player
+comment1.target=SkillTree(Player)
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=void\ updateImage()
+comment4.params=player
+comment4.target=void\ checkSkillBuy(Player)
+numComments=5

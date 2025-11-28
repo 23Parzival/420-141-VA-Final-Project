@@ -1,8 +1,14 @@
 #BlueJ class context
 comment0.target=Hitbox
 comment0.text=\r\n\ Write\ a\ description\ of\ class\ HitBox\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=player\ width\ height\ damage\ duration\ offsetX\ offsetY
-comment1.target=Hitbox(Player,\ int,\ int,\ int,\ int,\ int,\ int)
+comment1.params=owner\ width\ height\ damage\ duration\ offsetX\ offsetY
+comment1.target=Hitbox(Entity,\ int,\ int,\ int,\ int,\ int,\ int)
 comment2.params=
 comment2.target=void\ act()
-numComments=3
+comment3.params=
+comment3.target=void\ updatePosition()
+comment4.params=
+comment4.target=void\ damageTargets()
+comment5.params=
+comment5.target=void\ updateLifetime()
+numComments=6

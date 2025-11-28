@@ -11,44 +11,53 @@ import java.util.HashSet;
 public class Hitbox extends Actor {
     private int damage;
     private int duration; //frames it exists
-    private Player player;
+    private Entity owner;
     private int offsetX, offsetY; //distance from player center
     
     //track enemies already hit
-    private HashSet<Enemy> hitEnemies = new HashSet<>();
+    private HashSet<Entity> hitEntities = new HashSet<>();
     
-    public Hitbox(Player player, int width, int height, int damage, int duration, int offsetX, int offsetY) {
-        this.player = player;
+    public Hitbox(Entity owner, int width, int height, int damage, int duration, int offsetX, int offsetY) {
+        this.owner = owner;
         this.damage = damage;
         this.duration = duration;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
 
         GreenfootImage img = new GreenfootImage(width, height);
-        img.setTransparency(0); //invisible
-        //img.setColor(Color.RED); for debugging
-        //img.fillRect(0, 0, width, height);
+        //img.setTransparency(0); //invisible
+        img.setColor(Color.RED); //for debugging
+        img.fillRect(0, 0, width, height);
         setImage(img);
     }
 
     public void act() {
+        updatePosition();
+        damageTargets();
+        updateLifetime();
+    }
+    
+    private void updatePosition() {
         //update position based on player's rotation
-        double rad = Math.toRadians(player.getRotation());
+        double rad = Math.toRadians(owner.getRotation());
         int dx = (int)Math.round(Math.cos(rad) * offsetX - Math.sin(rad) * offsetY);
         int dy = (int)Math.round(Math.sin(rad) * offsetX + Math.cos(rad) * offsetY);
-        setLocation(player.getX() + dx, player.getY() + dy);
-        setRotation(player.getRotation());
-        
-        //damage any enemies intersecting the hitbox
-        for (Object obj : getIntersectingObjects(Enemy.class)) {
-            Enemy enemy = (Enemy)obj;
-            if (!hitEnemies.contains(enemy)) {
-                enemy.takeDamage(damage);
-                hitEnemies.add(enemy); //mark as already hit
-            }
-        }
+        setLocation(owner.getX() + dx, owner.getY() + dy);
+        setRotation(owner.getRotation());
+    }
+    
+    private void damageTargets() {
+        for (Entity e : getIntersectingObjects(Entity.class)) {
+            if (e == owner) continue;
+            if (e.getTeam() == owner.getTeam()) continue;
+            if (hitEntities.contains(e)) continue;
 
-        //decrease lifespan
+            e.takeDamage(damage);
+            hitEntities.add(e);
+        }
+    }
+
+    private void updateLifetime() {
         duration--;
         if (duration <= 0) {
             getWorld().removeObject(this);

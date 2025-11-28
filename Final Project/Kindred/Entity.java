@@ -15,16 +15,26 @@ public class Entity extends Actor
     protected int maxHealth;
     protected int currentHealth;
 
-    public Entity(int speed, int maxHealth) {
+    protected int attackCooldown;
+    protected int attackTimer;
+    
+    protected Team team;
+    public enum Team { PLAYER, ENEMY }
+
+    public Entity(int speed, int maxHealth, int attackCooldown, int attackTimer) {
         this.speed = speed;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
+        this.attackCooldown = attackCooldown;
+        this.attackTimer = attackTimer;
     }
 
     public void act() {
         updateMovement();
         moveWithCollision(dx, dy);
     }
+    
+    public Team getTeam() { return team; }
 
     protected void updateMovement() {}; //implemented in subclasses
 
@@ -52,6 +62,15 @@ public class Entity extends Actor
         getWorld().removeObject(this);
     }
     
+    public int heal(int amount) {
+        if (currentHealth >= maxHealth) return 0;
+        
+        int oldHealth = currentHealth;
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        return currentHealth - oldHealth;
+    }
+    
     protected Player getPlayer() {
         World w = getWorld();
         List<Player> players = w.getObjects(Player.class);
@@ -62,4 +81,17 @@ public class Entity extends Actor
 
         return null; //if no player exists
     }
+    
+    protected void tryAttack() {
+        //enemy attacking player
+        if (this instanceof Enemy) {
+            Player player = (Player)getOneIntersectingObject(Player.class);
+            if (player != null && attackTimer <= 0) {
+                performAttack();
+                attackTimer = attackCooldown;
+            }   
+        }
+    }
+    
+    protected void performAttack() {};
 }

@@ -10,10 +10,12 @@ public class Enemy extends Entity
 {
     private int detectionRange = 200;   //distance in pixels
     private int wanderRotation = 0; //current wandering direction (degrees)
-    private int wanderTimer = 0;    //frames left before changing direction   
+    private int wanderTimer = 0;    //frames left before changing direction  
     
     public Enemy() {
-        super(1, 5);
+        super(1, 5, 60, 0);
+        team = Team.ENEMY;
+        setImage("Goblin.png");
     }
     
     /**
@@ -23,6 +25,8 @@ public class Enemy extends Entity
     public void act()
     {
         updateMovement();
+        if (attackTimer > 0) attackTimer--;
+        tryAttack();
     }
     
     @Override
@@ -82,6 +86,29 @@ public class Enemy extends Entity
         } else {
             //if blocked, force pick a new direction next frame
             wanderTimer = 0;
+        }
+    }
+    
+    @Override
+    protected void performAttack() {
+        World w = getWorld();
+        if (w == null) return;
+
+        Hitbox h = new Hitbox(this, 30, 20, 1, 5, 25, 0);
+        w.addObject(h, getX(), getY());
+    }
+    
+    @Override
+    protected void die() {
+        //give XP to the player
+        World w = getWorld();
+        if (w != null) {
+            Player player = (Player) w.getObjects(Player.class).get(0); // single player
+            if (player != null) {
+                player.addXP(10);
+            }
+            //remove this enemy
+            w.removeObject(this);
         }
     }
 }
