@@ -10,17 +10,27 @@ public class Player extends Entity
 {
     private int xp = 0;
     private boolean canFire = true;
-    
+    private boolean canShootBow = true;
     //skills
     private boolean hasBow = false;
     private boolean hasInstantHeal = false;
     
     private int healCooldown = 0;
-    private final int healCooldownMax = 280; 
+    private final int healCooldownMax = 400; 
+    
+    private int bowCooldown = 0;
+    private final int bowCooldownTime = 300;
+    
+    private GreenfootImage idleImage = new GreenfootImage("GingerKnightBiggerNoSword.png");
+    private GreenfootImage swingImage = new GreenfootImage("GingerKnightBigger.png");
+
+    private int swingAnimTime = 0;
+    private int maxSwingAnimTime = 10;
     
     public Player() {
         super(3, 10, 60, 0);
         team = Team.PLAYER;
+        setImage("GingerKnightBiggerNoSword.png");
     }
     
     /**
@@ -29,14 +39,18 @@ public class Player extends Entity
      */
     public void act()
     {
+        //for debugging
+        addXP();
+        
         updateMovement();
         
-        if (attackTimer > 0) attackTimer--;
+        shootBow();
         swingSword();
+        updateSwingAnimation();
         
-        if (healCooldown > 0) {
-            healCooldown--;
-        }
+        if (attackTimer > 0) attackTimer--;
+        if (bowCooldown > 0) bowCooldown--;
+        if (healCooldown > 0) healCooldown--;
         handleHeal();
     }
     
@@ -69,10 +83,22 @@ public class Player extends Entity
     }
     
     private void handleHeal() {
+        World w = getWorld();
+        if (w == null) return;
+        
+        if (healCooldown > 0) {
+            w.showText("Heal Cooldown: " + healCooldown, 100, 100);
+            healCooldown--;
+            return;
+        } 
+        else {
+            //no cooldown, clear the text
+            w.showText("", 100, 100);
+        }
         if (hasInstantHeal() && Greenfoot.isKeyDown("H") && healCooldown <= 0) {
 
-            heal(3);  //heal the player
-            System.out.println("Instant heal used!");
+            heal(1);  //heal the player
+            w.showText("Instant Heal used!", 100, 100);
 
             healCooldown = healCooldownMax; //reset cooldown
         }
@@ -103,6 +129,15 @@ public class Player extends Entity
         moveWithCollision(dx, dy);
     }
     
+    private void updateSwingAnimation() {
+        if (swingAnimTime > 0) {
+            swingAnimTime--;
+            if (swingAnimTime == 0) {
+                setImage(idleImage); //reset back to idle
+            }
+        }
+    }
+    
     public void swingSword() {
         //press space to swing
         if(Greenfoot.isKeyDown("space") && attackTimer <= 0 && canFire) {
@@ -118,7 +153,40 @@ public class Player extends Entity
         World w = getWorld();
         if(w == null) return;
         
+        //Greenfoot.playSound(""); player sound here
+        setImage(swingImage);
+        swingAnimTime = maxSwingAnimTime;
+        
         Hitbox hb = new Hitbox(this, 60, 20, 1, 5, 40, 0);
         getWorld().addObject(hb, getX(), getY());
+    }
+    
+    public void shootBow() {
+        World w = getWorld();
+        if (w == null) return;
+        if (bowCooldown > 0) {
+            w.showText("Bow Cooldown: " + bowCooldown, 100, 150); 
+            bowCooldown--;
+            return;
+        }
+        else {
+            w.showText("", 100, 150);
+        }
+        if (Greenfoot.isKeyDown("E") && hasBow && bowCooldown <= 0 && canShootBow) {
+            shootArrow();
+            bowCooldown = bowCooldownTime;
+            canShootBow = false;
+        }
+        if (!Greenfoot.isKeyDown("E")) canShootBow = true;
+    }
+    
+    private void shootArrow() {
+        Arrow arrow = new Arrow(getRotation());
+        getWorld().addObject(arrow, getX(), getY());
+    }
+    
+    //for debugging purposes
+    private void addXP() {
+        if (Greenfoot.isKeyDown("Q")) addXP(30);
     }
 }

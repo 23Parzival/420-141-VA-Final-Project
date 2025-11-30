@@ -25,24 +25,31 @@ public class Hitbox extends Actor {
         this.offsetY = offsetY;
 
         GreenfootImage img = new GreenfootImage(width, height);
-        //img.setTransparency(0); //invisible
-        img.setColor(Color.RED); //for debugging
-        img.fillRect(0, 0, width, height);
+        img.setTransparency(0); //invisible
+        //img.setColor(Color.RED); //for debugging
+        //img.fillRect(0, 0, width, height);
         setImage(img);
     }
 
     public void act() {
+        if (owner == null || owner.getWorld() == null) {
+            if (getWorld() != null) {
+                getWorld().removeObject(this);
+                return;
+            }
+        }
         updatePosition();
         damageTargets();
         updateLifetime();
     }
     
     private void updatePosition() {
+        if (owner == null || owner.getWorld() == null) return;
         //update position based on player's rotation
         double rad = Math.toRadians(owner.getRotation());
         int dx = (int)Math.round(Math.cos(rad) * offsetX - Math.sin(rad) * offsetY);
         int dy = (int)Math.round(Math.sin(rad) * offsetX + Math.cos(rad) * offsetY);
-        setLocation(owner.getX() + dx, owner.getY() + dy);
+        if (getWorld() != null) setLocation(owner.getX() + dx, owner.getY() + dy);
         setRotation(owner.getRotation());
     }
     
@@ -59,7 +66,7 @@ public class Hitbox extends Actor {
 
     private void updateLifetime() {
         duration--;
-        if (duration <= 0) {
+        if (duration <= 0 && getWorld() != null) {
             getWorld().removeObject(this);
         }
     }

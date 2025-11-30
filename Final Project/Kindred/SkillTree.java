@@ -3,12 +3,19 @@ import greenfoot.*;
 public class SkillTree extends Actor {
     private Player player;
     
+    private int messageTimer = 0;
+    private String currentMessage = "";
+    
+    private boolean key1Ready = true;
+    private boolean key2Ready = true;
+    
     public SkillTree(Player player) {
         this.player = player;
         updateImage();
     }
 
     public void act() {
+        updateMessage(); 
         if (player != null && player.getWorld() != null) {
             checkSkillBuy(player);
         }
@@ -28,39 +35,62 @@ public class SkillTree extends Actor {
 
         img.drawString("SKILL TREE:", 10, 20);
 
-        img.drawString("[1] Unlock Bow (30 XP)", 10, 50);
-        img.drawString("[2] Instant Heal (20 XP)", 10, 80);
+        img.drawString("[1] Unlock Bow (30 XP)", 10, 44);
+        img.drawString("[2] Instant Heal (20 XP)", 10, 64);
+        img.drawString("[E] to use bow", 10, 84);
+        img.drawString("[H] to use heal", 10, 104);
 
         setImage(img);
     }
 
     public void checkSkillBuy(Player player) {
+        if (player == null) return;
+        World w = getWorld();
+        if (w == null) return;
+        
         //buy Bow (key 1)
-        if (Greenfoot.isKeyDown("1")) {
-            if (player.hasBow()) {
-                System.out.println("Already unlocked.");
-            } 
-            else if (player.getXP() < 30) {
-                System.out.println("Not enough XP.");
+        if (Greenfoot.isKeyDown("1") && key1Ready) {
+            key1Ready = false;
+            if (player.getXP() < 30) {
+                showMessage(w, "Not enough XP");
             } 
             else {
                 player.unlockBow();
                 player.addXP(-30);
-                System.out.println("Bow unlocked!");
+                showMessage(w, "Bow unlocked!");
             }
         }
+        if (!Greenfoot.isKeyDown("1")) {
+            key1Ready = true;
+        }
         //buy Instant Heal ability (key 2)
-        if (Greenfoot.isKeyDown("2")) {
-            if (player.hasInstantHeal()) {
-                System.out.println("Already unlocked.");
-            } 
-            else if (player.getXP() < 20) {
-                System.out.println("Not enough XP.");
+        if (Greenfoot.isKeyDown("2") && key2Ready) {
+            key2Ready = false;
+            if (player.getXP() < 20) {
+                showMessage(w, "Not enough XP");
             } 
             else {
                 player.unlockInstantHeal();
                 player.addXP(-20);
-                System.out.println("Instant Heal unlocked!");
+                showMessage(w, "Instant Heal unlocked!");
+            }
+        }
+        if (!Greenfoot.isKeyDown("2")) {
+            key2Ready = true;
+        }
+    }
+    
+    private void showMessage(World w, String msg) {
+        currentMessage = msg;
+        messageTimer = 90; //1.5 seconds at 60fps
+        w.showText(msg, 600, 650); //bottom center
+    }
+    
+    private void updateMessage() {
+        if (messageTimer > 0) {
+            messageTimer--;
+            if (messageTimer == 0 && getWorld() != null) {
+                getWorld().showText("", 600, 650);
             }
         }
     }

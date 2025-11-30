@@ -8,14 +8,21 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Enemy extends Entity
 {
-    private int detectionRange = 200;   //distance in pixels
-    private int wanderRotation = 0; //current wandering direction (degrees)
-    private int wanderTimer = 0;    //frames left before changing direction  
+    protected int detectionRange = 200;   //distance in pixels
+    protected int wanderRotation = 0; //current wandering direction (degrees)
+    protected int wanderTimer = 0;    //frames left before changing direction
+    
+    private GreenfootImage idleImage = new GreenfootImage("Goblin.png");
+    private GreenfootImage swingImage = new GreenfootImage("GoblinNoSword.png");
+
+    protected int swingAnimTime = 0;
+    protected int maxSwingAnimTime = 10;
     
     public Enemy() {
-        super(1, 5, 60, 0);
+        super(1, 3, 60, 0);
         team = Team.ENEMY;
-        setImage("Goblin.png");
+        setImage("GoblinNoSword.png");
+        setRotation(Greenfoot.getRandomNumber(360));
     }
     
     /**
@@ -27,6 +34,7 @@ public class Enemy extends Entity
         updateMovement();
         if (attackTimer > 0) attackTimer--;
         tryAttack();
+        updateSwingAnimation();
     }
     
     @Override
@@ -54,8 +62,8 @@ public class Enemy extends Entity
             //compute dx/dy based on direction vector
             double angle = Math.atan2(py - ey, px - ex);
             
-            int dx = (int)Math.round(Math.cos(angle) * speed);
-            int dy = (int)Math.round(Math.sin(angle) * speed);
+            dx = (int)Math.round(Math.cos(angle) * speed);
+            dy = (int)Math.round(Math.sin(angle) * speed);
             turnTowards(px, py);
             moveWithCollision(dx, dy);
         }
@@ -64,7 +72,7 @@ public class Enemy extends Entity
         }
     }
     
-    private void handleWandering() {
+    protected void handleWandering() {
         wanderTimer--;
 
         //pick a new random direction if timer expired
@@ -89,12 +97,25 @@ public class Enemy extends Entity
         }
     }
     
+    protected void updateSwingAnimation() {
+        if (swingAnimTime > 0) {
+            swingAnimTime--;
+            if (swingAnimTime == 0) {
+                setImage(idleImage); //reset back to idle
+            }
+        }
+    }
+    
     @Override
     protected void performAttack() {
         World w = getWorld();
         if (w == null) return;
+        
+        //Greenfoot.playSound(""); enemy sound here
+        setImage(swingImage);
+        swingAnimTime = maxSwingAnimTime;
 
-        Hitbox h = new Hitbox(this, 30, 20, 1, 5, 25, 0);
+        Hitbox h = new Hitbox(this, 20, 20, 1, 5, 25, 0);
         w.addObject(h, getX(), getY());
     }
     
