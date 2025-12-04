@@ -53,14 +53,17 @@ public class SkillTree extends Actor {
             key1Ready = false;
             if (player.getXP() < 30) {
                 showMessage(w, "Not enough XP");
+                SoundController.playErrorSound();
             } 
             else if (player.hasBow()) {
                 showMessage(w, "Already unlocked!");
+                SoundController.playErrorSound();
             }
             else {
                 player.unlockBow();
                 player.addXP(-30);
                 showMessage(w, "Bow unlocked!");
+                SoundController.playPerkSound();
             }
         }
         if (!Greenfoot.isKeyDown("1")) {
@@ -71,14 +74,17 @@ public class SkillTree extends Actor {
             key2Ready = false;
             if (player.getXP() < 20) {
                 showMessage(w, "Not enough XP");
+                SoundController.playErrorSound();
             } 
             else if (player.hasInstantHeal()) {
                 showMessage(w, "Already unlocked!");
+                SoundController.playErrorSound();
             }
             else {
                 player.unlockInstantHeal();
                 player.addXP(-20);
                 showMessage(w, "Instant Heal unlocked!");
+                SoundController.playPerkSound();
             }
         }
         if (!Greenfoot.isKeyDown("2")) {

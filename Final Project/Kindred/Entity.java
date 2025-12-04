@@ -20,6 +20,7 @@ public class Entity extends Actor
     
     protected Team team;
     public enum Team { PLAYER, ENEMY }
+    
 
     public Entity(int speed, int maxHealth, int attackCooldown, int attackTimer) {
         this.speed = speed;
@@ -27,6 +28,7 @@ public class Entity extends Actor
         this.currentHealth = maxHealth;
         this.attackCooldown = attackCooldown;
         this.attackTimer = attackTimer;
+        
     }
 
     public void act() {
@@ -56,10 +58,25 @@ public class Entity extends Actor
             currentHealth = 0;
             die();
         }
+        if(this.getClass() == Player.class){
+            SoundController.playGruntSound();
+        }
+        if(this.getClass() == Enemy.class){
+            SoundController.playMonsterSound();
+        }
+        if(this.getClass() == Boss.class){
+            SoundController.playMonsterSound();
+        }
     }
 
     protected void die() {
+        World w = getWorld();
         getWorld().removeObject(this);
+        if(w.getObjects(Player.class).isEmpty()){
+            Greenfoot.setWorld(new GameOver());
+            SoundController.stopLevelMusic();
+            SoundController.startLoseMusic();
+        }
     }
     
     public int heal(int amount) {

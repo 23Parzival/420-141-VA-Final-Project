@@ -14,6 +14,9 @@ public class GameOver extends World
      */
     public GameOver()
     {    
-        super(600, 400, 1); 
+        super(1200, 700, 1);
+        GreenfootImage bg = new GreenfootImage("youlose.jpg");
+        bg.scale(getWidth(), getHeight());
+        setBackground(bg);
     }
 }

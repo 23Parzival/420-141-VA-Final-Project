@@ -15,6 +15,9 @@ public class WinScreen extends World
      */
     public WinScreen()
     {    
-        super(600, 400, 1); 
+        super(1200, 700, 1); 
+        GreenfootImage bg = new GreenfootImage("youwin.png");
+        bg.scale(getWidth(), getHeight()); 
+        setBackground(bg);
     }
 }

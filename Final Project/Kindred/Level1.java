@@ -24,6 +24,12 @@ public class Level1 extends World
 
         Enemy enemy3 = new Enemy();
         addObject(enemy3, 500, 400);
+        
+        Enemy enemy4 = new Enemy();
+        addObject(enemy4,291,584);
+        
+        Enemy enemy5 = new Enemy();
+        addObject(enemy5,640,84);
 
         //create health bar for enemy
         HealthBar hb = new HealthBar(enemy, enemy.getImage().getWidth(), 5);
@@ -34,6 +40,12 @@ public class Level1 extends World
 
         HealthBar hb3 = new HealthBar(enemy3, enemy3.getImage().getWidth(), 5);
         addObject(hb3, enemy3.getX(), enemy3.getY() - enemy3.getImage().getHeight() / 2 - 5);
+        
+        HealthBar hb4 = new HealthBar(enemy4, enemy4.getImage().getWidth(), 5);
+        addObject(hb4, enemy4.getX(), enemy4.getY() - enemy4.getImage().getHeight() / 2 - 5);
+
+        HealthBar hb5 = new HealthBar(enemy5, enemy5.getImage().getWidth(), 5);
+        addObject(hb5, enemy5.getX(), enemy5.getY() - enemy5.getImage().getHeight() / 2 - 5);
 
         Player player = new Player();
         addObject(player, 100, 300); //anywhere in the world
@@ -45,14 +57,15 @@ public class Level1 extends World
         Boss boss = new Boss();
         addObject(boss, 1000, 350);
 
-        HealthBar hb4 = new HealthBar(boss, boss.getImage().getWidth(), 5);
-        addObject(hb4, boss.getX(), boss.getY() - boss.getImage().getHeight() / 2 - 5);
+        HealthBar hb6 = new HealthBar(boss, boss.getImage().getWidth(), 5);
+        addObject(hb6, boss.getX(), boss.getY() - boss.getImage().getHeight() / 2 - 5);
 
         addObject(new XpCounter(player), 550, 45);
 
         addObject(new SkillTree(player), 1200-85, 55);
         prepare();
     }
+    
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.

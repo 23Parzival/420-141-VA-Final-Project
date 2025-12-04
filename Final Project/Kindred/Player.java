@@ -27,10 +27,12 @@ public class Player extends Entity
     private int swingAnimTime = 0;
     private int maxSwingAnimTime = 10;
     
+    
     public Player() {
         super(3, 10, 60, 0);
         team = Team.PLAYER;
         setImage("GingerKnightBiggerNoSword.png");
+        
     }
     
     /**
@@ -49,6 +51,16 @@ public class Player extends Entity
         if (bowCooldown > 0) bowCooldown--;
         if (healCooldown > 0) healCooldown--;
         handleHeal();
+        checkForWin();
+    }
+    
+    public void checkForWin(){
+        World w = getWorld();
+        if(w.getObjects(Enemy.class).isEmpty() || w.getObjects(Boss.class).isEmpty()){
+            Greenfoot.setWorld(new WinScreen());
+            SoundController.stopLevelMusic();
+            SoundController.startWinMusic();
+        }
     }
     
     public void addXP(int amount) {
@@ -96,6 +108,7 @@ public class Player extends Entity
 
             heal(1);  //heal the player
             w.showText("Instant Heal used!", 100, 100);
+            SoundController.playHealSound();
 
             healCooldown = healCooldownMax; //reset cooldown
         }
@@ -150,7 +163,7 @@ public class Player extends Entity
         World w = getWorld();
         if(w == null) return;
         
-        //Greenfoot.playSound(""); player sound here
+        SoundController.playSwordSound();
         setImage(swingImage);
         swingAnimTime = maxSwingAnimTime;
         
@@ -171,6 +184,7 @@ public class Player extends Entity
         }
         if (Greenfoot.isKeyDown("E") && hasBow && bowCooldown <= 0 && canShootBow) {
             shootArrow();
+            SoundController.playShootSound();
             bowCooldown = bowCooldownTime;
             canShootBow = false;
         }

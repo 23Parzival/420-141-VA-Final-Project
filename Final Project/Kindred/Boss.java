@@ -24,6 +24,7 @@ public class Boss extends Enemy
     private GreenfootImage bossAttack = new GreenfootImage("GoblinBossAttack.png");
     private GreenfootImage bossAngry = new GreenfootImage("GoblinBossAngry.png");
     private GreenfootImage bossAngryAttack = new GreenfootImage("GoblinBossAngryAttack.png");
+    
 
     public Boss() {
         super();
@@ -33,12 +34,13 @@ public class Boss extends Enemy
         this.currentHealth = maxHealth;
 
         this.attackCooldown = 40;   //slower but stronger attacks
-        this.detectionRange = 350;  //larger aggro range
+        this.detectionRange = 1200;  //larger aggro range
         this.speed = 1;             //faster than normal goblins
         this.team = Team.ENEMY;
 
         setImage(bossIdle);
         setRotation(180);
+        
     }
     
     @Override 

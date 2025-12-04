@@ -18,11 +18,13 @@ public class Enemy extends Entity
     protected int swingAnimTime = 0;
     protected int maxSwingAnimTime = 15;
     
+    
     public Enemy() {
         super(1, 3, 60, 0);
         team = Team.ENEMY;
         setImage("GoblinNoSword.png");
         setRotation(Greenfoot.getRandomNumber(360));
+        
     }
     
     /**
@@ -130,6 +132,7 @@ public class Enemy extends Entity
             }
             //remove this enemy
             w.removeObject(this);
+            SoundController.playDeathSound();
         }
     }
 }
