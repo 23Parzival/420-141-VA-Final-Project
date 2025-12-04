@@ -16,7 +16,7 @@ public class Enemy extends Entity
     private GreenfootImage swingImage = new GreenfootImage("GoblinNoSword.png");
 
     protected int swingAnimTime = 0;
-    protected int maxSwingAnimTime = 10;
+    protected int maxSwingAnimTime = 15;
     
     public Enemy() {
         super(1, 3, 60, 0);

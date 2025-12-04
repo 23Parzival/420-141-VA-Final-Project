@@ -28,7 +28,7 @@ public class XpCounter extends Actor {
         img.setColor(new Color(0,0,0,0));
         img.fill();
 
-        img.setColor(Color.BLACK);
+        img.setColor(Color.WHITE);
         img.setFont(new Font("Arial", 20));
         img.drawString("XP: " + player.getXP(), 5, 25);
 

@@ -54,6 +54,9 @@ public class SkillTree extends Actor {
             if (player.getXP() < 30) {
                 showMessage(w, "Not enough XP");
             } 
+            else if (player.hasBow()) {
+                showMessage(w, "Already unlocked!");
+            }
             else {
                 player.unlockBow();
                 player.addXP(-30);
@@ -69,6 +72,9 @@ public class SkillTree extends Actor {
             if (player.getXP() < 20) {
                 showMessage(w, "Not enough XP");
             } 
+            else if (player.hasInstantHeal()) {
+                showMessage(w, "Already unlocked!");
+            }
             else {
                 player.unlockInstantHeal();
                 player.addXP(-20);

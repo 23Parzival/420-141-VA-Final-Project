@@ -39,9 +39,6 @@ public class Player extends Entity
      */
     public void act()
     {
-        //for debugging
-        addXP();
-        
         updateMovement();
         
         shootBow();
@@ -183,10 +180,5 @@ public class Player extends Entity
     private void shootArrow() {
         Arrow arrow = new Arrow(getRotation());
         getWorld().addObject(arrow, getX(), getY());
-    }
-    
-    //for debugging purposes
-    private void addXP() {
-        if (Greenfoot.isKeyDown("Q")) addXP(30);
     }
 }

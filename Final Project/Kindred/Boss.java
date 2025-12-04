@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 /**
  * Write a description of class Boss here.
@@ -10,6 +11,8 @@ public class Boss extends Enemy
 {
     private int phase = 1;
     
+    private boolean awakened = false;
+    
     private final int spawnX = 1000;
     private final int spawnY = 350;
     private boolean reachedSpawn = false;
@@ -19,11 +22,13 @@ public class Boss extends Enemy
 
     private GreenfootImage bossIdle = new GreenfootImage("GoblinBoss.png");
     private GreenfootImage bossAttack = new GreenfootImage("GoblinBossAttack.png");
+    private GreenfootImage bossAngry = new GreenfootImage("GoblinBossAngry.png");
+    private GreenfootImage bossAngryAttack = new GreenfootImage("GoblinBossAngryAttack.png");
 
     public Boss() {
         super();
 
-        // Override Enemy's base stats
+        //override Enemys base stats
         this.maxHealth = 15;
         this.currentHealth = maxHealth;
 
@@ -38,13 +43,8 @@ public class Boss extends Enemy
     
     @Override 
     public void act() {
+        if (!awakened) return;
         updatePhase();
-        
-        if (reachedSpawn) {
-            Player player = getPlayer();
-            if (player == null) return;
-            turnTowards(player.getX(), player.getY());
-        }
 
         if (phase == 3) {
             handlePhaseThree();
@@ -56,10 +56,10 @@ public class Boss extends Enemy
     }
     
     private void updatePhase() {
+        if (!awakened) return;
         if (currentHealth <= 5 && phase < 3) {
             phase = 3;
             reachedSpawn = false;
-            return;
         }
         else if (currentHealth <= 10 && phase < 2) {
             phase = 2;
@@ -79,8 +79,11 @@ public class Boss extends Enemy
             return;
         }
 
-        //once at spawn, begin ranged attacks only
-        rangedAttack();
+        Player player = getPlayer();
+        if (player != null) {
+            turnTowards(player.getX(), player.getY());
+            rangedAttack();
+        }
     }
     
     private void retreatToSpawn() {
@@ -130,10 +133,8 @@ public class Boss extends Enemy
 
         int px = player.getX();
         int py = player.getY();
-
         int ex = getX();
         int ey = getY();
-
         int dist = (int)Math.hypot(px - ex, py - ey);
 
         //chase hard if in range, wander otherwise
@@ -151,7 +152,8 @@ public class Boss extends Enemy
         World w = getWorld();
         if (w == null) return;
 
-        setImage(bossAttack);
+        if(phase >= 2) setImage(bossAngryAttack);
+        else setImage(bossAttack);
         swingAnimTime = maxSwingAnimTime;
         //Greenfoot.playSound(""); boss sound here
 
@@ -162,11 +164,17 @@ public class Boss extends Enemy
     
     @Override
     public void takeDamage(int amount) {
+        if (getWorld() == null) return;
         //cant take damage while he returns to spawn
         if (phase == 3 && !reachedSpawn) return;
-    
+        if (!awakened) {
+            awakened = true;
+            World w = getWorld();
+            if (w != null) {
+                w.removeObjects(w.getObjects(Wall.class));  // remove all walls immediately
+            }
+        }
         super.takeDamage(amount);
-        if (getWorld() == null) return;
     }
 
     @Override
@@ -183,13 +191,16 @@ public class Boss extends Enemy
     
     @Override
     protected void updateSwingAnimation() {
-        if (swingAnimTime <= 0) {
-            setImage(bossIdle);
-            return;
-        }
-        swingAnimTime--;
-        if (swingAnimTime == 0) {
-            setImage(bossIdle);
+        if (swingAnimTime > 0) {
+            swingAnimTime--;
+            if (swingAnimTime == 0) {
+                if (phase >= 2) {
+                    setImage(bossAngry);
+                } 
+                else {
+                    setImage(bossIdle);
+                } 
+            }
         }
     }
 }

@@ -21,35 +21,51 @@ public class Level1 extends World
 
         Enemy enemy2 = new Enemy();
         addObject(enemy2, 500, 300);
-        
+
         Enemy enemy3 = new Enemy();
         addObject(enemy3, 500, 400);
-        
+
         //create health bar for enemy
         HealthBar hb = new HealthBar(enemy, enemy.getImage().getWidth(), 5);
         addObject(hb, enemy.getX(), enemy.getY() - enemy.getImage().getHeight() / 2 - 5);  
-        
+
         HealthBar hb2 = new HealthBar(enemy2, enemy2.getImage().getWidth(), 5);
         addObject(hb2, enemy2.getX(), enemy2.getY() - enemy2.getImage().getHeight() / 2 - 5);
-        
+
         HealthBar hb3 = new HealthBar(enemy3, enemy3.getImage().getWidth(), 5);
         addObject(hb3, enemy3.getX(), enemy3.getY() - enemy3.getImage().getHeight() / 2 - 5);
-        
+
         Player player = new Player();
         addObject(player, 100, 300); //anywhere in the world
 
         //add HUD health bar at top-left corner (x=60, y=15)
         HealthBar playerBar = new HealthBar(player, 400, 25, 220, 50);
         addObject(playerBar, 220, 50);
-        
+
         Boss boss = new Boss();
         addObject(boss, 1000, 350);
-        
+
         HealthBar hb4 = new HealthBar(boss, boss.getImage().getWidth(), 5);
         addObject(hb4, boss.getX(), boss.getY() - boss.getImage().getHeight() / 2 - 5);
-        
+
         addObject(new XpCounter(player), 550, 45);
-        
+
         addObject(new SkillTree(player), 1200-85, 55);
+        prepare();
+    }
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
+    private void prepare()
+    {
+        Wall wall = new Wall();
+        addObject(wall,560,572);
+        Wall wall2 = new Wall();
+        addObject(wall2,647,397);
+        Wall wall3 = new Wall();
+        addObject(wall3,643,220);
+        Wall wall4 = new Wall();
+        addObject(wall4,471,134);
     }
 }

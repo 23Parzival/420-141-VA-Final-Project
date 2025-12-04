@@ -16,4 +16,13 @@ public class Wall extends Actor
     {
     
     }
+    
+    public Wall() {
+        GreenfootImage img = new GreenfootImage("Wall.png");
+        int newWidth = img.getWidth();
+        int newHeight = img.getHeight();
+        img.scale(newWidth, newHeight);
+
+        setImage(img);
+    }
 }
